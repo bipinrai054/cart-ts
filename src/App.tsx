@@ -25,6 +25,7 @@ export type CartItemType = {
 
 // components
 import Item from './items/Item'
+import Cart from './cart/Cart'
 
 
 const getProducts = async(): Promise <CartItemType[]> => await (await fetch('https://fakestoreapi.com/products')).json()
@@ -36,7 +37,7 @@ const App = () => {
 
   const {data,isLoading,error} = useQuery<CartItemType[]>('products',getProducts)
   
-  const getTotalItems = (items: CartItemType[]) => null;
+  const getTotalItems = (items: CartItemType[]) => items.reduce((acc:number, item)=>acc+item.amount,0)
 
   const handleAddToCart = (clickedItem: CartItemType) => null;
 
@@ -52,7 +53,7 @@ const App = () => {
         open={cartOpen} 
         onClose={()=>setCartOpen(false)}
         >
-          Cart
+        <Cart cartItems={cartItems}  addToCart={handleAddToCart}  removeFromCart={handleRemoveFromCart} />
         </Drawer>
         <StyledButton onClick={()=>setCartOpen(true)}>
           <Badge badgeContent={getTotalItems(cartItems)} color='error' >
