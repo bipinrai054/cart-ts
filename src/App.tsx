@@ -38,8 +38,26 @@ const App = () => {
   const {data,isLoading,error} = useQuery<CartItemType[]>('products',getProducts)
   
   const getTotalItems = (items: CartItemType[]) => items.reduce((acc:number, item)=>acc+item.amount,0)
+  
+  
 
-  const handleAddToCart = (clickedItem: CartItemType) => null;
+  const handleAddToCart = (clickedItem: CartItemType) => {
+    setCartItems(prev=>{
+      
+      // is the item already in the cart?
+      const isItemCart = prev.find(item=>item.id === clickedItem.id)
+
+      if(isItemCart){
+        return prev.map(item=>(
+          item.id === clickedItem.id ? {...item,amount:item.amount+1} : item
+        ))
+      }
+
+      // first time item added
+      return [...prev,{...clickedItem,amount:1}]
+
+    })
+  }
 
   const handleRemoveFromCart = () => null;
 
